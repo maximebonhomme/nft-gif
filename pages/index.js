@@ -1,6 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react"
 import gifshot from 'gifshot'
-import { Button, Box, Flex, Heading } from '@chakra-ui/react'
+import { Button, Box, Flex, Heading, Grid, GridItem, IconButton, Image } from '@chakra-ui/react'
+import { CheckIcon, AddIcon, WarningIcon } from '@chakra-ui/icons'
 import { ethers } from "ethers"
 import Web3Modal from "web3modal"
 import WalletConnectProvider from "@walletconnect/web3-provider"
@@ -36,6 +38,7 @@ export default function Home() {
   const [gif, setGif] = useState(null)
   const [web3Modal, setWeb3Modal] = useState(null)
   const [accounts, setAccounts] = useState([])
+  const [selectedImages, setSelectedImages] = useState(IMAGES)
 
   useEffect(() => {
     const web3Modal = new Web3Modal({
@@ -72,11 +75,12 @@ export default function Home() {
   }
 
   const generateGIF = async () => {
+    if (selectedImages.length === 0) return
     setLoading({...loading, gif: true});
 
     gifshot.createGIF({
       ...BASE_OPTIONS,
-      images: IMAGES
+      images: selectedImages
     }, (obj) => {
       setLoading({...loading, gif: false});
       if (!obj.error) {
@@ -85,6 +89,19 @@ export default function Home() {
     });
   }
 
+  const toggleImage = (image) => {
+    const exists = selectedImages.includes(image)
+
+    if (exists) {
+      setSelectedImages(selectedImages.filter((c) => { return c !== image }))
+    } else {
+      setSelectedImages([...selectedImages, image])
+    }
+  }
+
+  const resetGif = () => {
+    setGif(null)
+  }
 
   return (
     <Box as='main' px={10}>
@@ -93,14 +110,49 @@ export default function Home() {
 
         <Box my={5}>
           {accounts.length > 0 ? (
-            <Button isLoading={loading.gif} colorScheme='blue' onClick={generateGIF}>Generate GIF</Button>
+            <>
+              {gif ? (
+                <Button colorScheme='blue' onClick={resetGif}>Select NFTs</Button>
+              ) : (
+                <Button isLoading={loading.gif} colorScheme='blue' onClick={generateGIF}>Generate GIF</Button>
+              )}
+            </>
           ) : (
             <Button isLoading={loading.connect} colorScheme='blue' onClick={connectWallet}>Connect Wallet</Button>
           )}
         </Box>
 
-        {gif && (
-          <img src={gif} alt='generated gif' />
+        {gif ? (
+          <>
+            <img src={gif} alt='generated gif' />
+            <Box my={5}>
+              <a href={gif} target="_blank" rel="noreferrer">
+                <Button colorScheme='blue'>Download</Button>
+              </a>
+            </Box>
+          </>
+        ) : (
+          <Grid templateColumns='repeat(5, 1fr)' gap={6}>
+            {IMAGES.map((image, index) => {
+              const active = selectedImages.includes(image)
+
+              return (
+                <GridItem key={index} w='100%' position='relative' onClick={() => { toggleImage(image) }} cursor='pointer'>
+                  <IconButton
+                    position='absolute'
+                    top={2}
+                    left={2}
+                    aria-label={active ? 'deselect' : 'select'}
+                    icon={active ? <CheckIcon /> : <AddIcon />}
+                    color={active ? 'green' : 'white'}
+                    colorScheme={active ? 'gray' : 'blackAlpha'}
+                    isRound
+                  />
+                  <Image src={image} alt='image' w='100%' />
+                </GridItem>
+              )
+            })}
+          </Grid>
         )}
       </Flex>
     </Box>
