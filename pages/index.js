@@ -96,7 +96,7 @@ export default function Home() {
   }
 
   return (
-    <Box as='main' px={10}>
+    <Box as='main' px={[4, 6, 10]}>
       <Flex flexDirection='column' alignItems='center'>
         <Heading my={5} as='h2' size='xl'>Turn your NFT collection into a gif</Heading>
 

@@ -23,7 +23,7 @@ const ImageSelection = ({ images, onChange }) => {
     <>
       <Button size='xs' mb={5} mr={1} colorScheme='gray' onClick={() => { setSelectedImages(images) }}>Select all</Button>
       <Button size='xs' mb={5} ml={1} colorScheme='gray' onClick={() => { setSelectedImages([]) }}>Deselect all</Button>
-      <Grid templateColumns='repeat(3, 1fr)' gap={4}>
+      <Grid templateColumns={['repeat(2, 1fr)', 'repeat(2, 1fr)', 'repeat(3, 1fr)']} gap={4}>
         {images.map((image, index) => {
           const active = selectedImages.includes(image)
 
