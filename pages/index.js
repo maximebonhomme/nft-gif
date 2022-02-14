@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import gifshot from 'gifshot'
 import { Button, Box, Flex, Heading, Text } from '@chakra-ui/react'
+import { RepeatIcon } from '@chakra-ui/icons'
 import { ethers } from "ethers"
 import Web3Modal from "web3modal"
 import WalletConnectProvider from "@walletconnect/web3-provider"
@@ -113,7 +114,10 @@ export default function Home() {
         {accounts.length > 0 && !gif && (
           <BoxContainer>
             <ImageSelection images={IMAGES} onChange={(imgs) => setSelectedImages(imgs)} />
-            <Button mt={5} isLoading={loading.gif} isDisabled={selectedImages.length < 2} colorScheme='green' onClick={generateGIF}>Generate GIF</Button>
+            <Button mt={5} isLoading={loading.gif} isDisabled={selectedImages.length < 2} colorScheme='green' onClick={generateGIF}>
+              <RepeatIcon mr={2} />
+              Generate GIF
+            </Button>
           </BoxContainer>
         )}
       </Flex>
