@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react"
 import gifshot from 'gifshot'
-import { Button, Box, Flex, Heading } from '@chakra-ui/react'
+import { Button, Box, Flex, Heading, Text } from '@chakra-ui/react'
 import { ethers } from "ethers"
 import Web3Modal from "web3modal"
 import WalletConnectProvider from "@walletconnect/web3-provider"
@@ -96,9 +96,10 @@ export default function Home() {
   }
 
   return (
-    <Box as='main' px={[4, 6, 10]}>
+    <Box as='main' px={[4, 6, 10]} py={8}>
       <Flex flexDirection='column' alignItems='center'>
-        <Heading my={5} as='h2' size='xl'>Turn your NFT collection into a gif</Heading>
+        <Heading as='h2' size='xl'>Gif Wallet</Heading>
+        <Text>Turn your NFT collection into a GIF</Text>
 
         <Box my={5}>
           {accounts.length === 0 && (
