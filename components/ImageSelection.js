@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Button, Grid, GridItem, IconButton, Image } from '@chakra-ui/react'
+import { Button, Grid, GridItem, IconButton, Image, AspectRatio } from '@chakra-ui/react'
 import { CheckIcon, AddIcon } from '@chakra-ui/icons'
 
 const ImageSelection = ({ images, onChange }) => {
@@ -28,7 +28,10 @@ const ImageSelection = ({ images, onChange }) => {
           const active = selectedImages.includes(image)
 
           return (
-            <GridItem key={image} w='100%' position='relative' onClick={() => { toggleImage(image) }} cursor='pointer'>
+            <GridItem key={image.id} w='100%' position='relative' onClick={() => { toggleImage(image) }} cursor='pointer'>
+              <AspectRatio w='100%' ratio={1}>
+                <Image src={image.image} w='100%' alt='image' objectFit='cover' borderRadius='xl' />
+              </AspectRatio>
               <IconButton
                 size='xs'
                 position='absolute'
@@ -40,7 +43,6 @@ const ImageSelection = ({ images, onChange }) => {
                 colorScheme={active ? 'gray' : 'blackAlpha'}
                 isRound
               />
-              <Image src={image} alt='image' w='100%' borderRadius='xl' />
             </GridItem>
           )
         })}
