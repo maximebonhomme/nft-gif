@@ -12,7 +12,7 @@ Using:
 
 ## Demo
 
-Demo is live at: https://nft-gif.vercel.app/
+Demo is live at: https://gifwallet.xyz
 
 ## Getting Started
 
