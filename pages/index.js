@@ -1,21 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import axios from 'axios'
 import gifshot from 'gifshot'
 import { Button, Box, Flex, Heading, Text } from '@chakra-ui/react'
-import { RepeatIcon } from '@chakra-ui/icons'
+import { RepeatIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { ethers } from "ethers"
 import Web3Modal from "web3modal"
 import WalletConnectProvider from "@walletconnect/web3-provider"
 import GifResult from "../components/GifResult"
 import ImageSelection from "../components/ImageSelection"
 import BoxContainer from "../components/BoxContainer"
-
-const BASE_OPTIONS = {
-  gifWidth: 600,
-  gifHeight: 600,
-  frameDuration: 4
-}
+import { getFrameDuration } from "../helpers/gif"
 
 const PROVIDER_OPTIONS = {
   walletconnect: {
@@ -26,16 +21,20 @@ const PROVIDER_OPTIONS = {
   }
 }
 
+const LIMIT = 9
+
 export default function Home() {  
   const [loading, setLoading] = useState({
     gif: false,
-    connect: false
+    connect: false,
+    nfts: false
   })
   const [gif, setGif] = useState(null)
   const [selectedImages, setSelectedImages] = useState([])
   const [web3Modal, setWeb3Modal] = useState(null)
   const [accounts, setAccounts] = useState([])
   const [NFTs, setNFTs] = useState([])
+  const [page, setPage] = useState(0)
 
   useEffect(() => {
     const web3Modal = new Web3Modal({
@@ -59,7 +58,7 @@ export default function Home() {
     if (accounts[0]) {
       fetchNFTs(accounts[0])
     }
-  }, [accounts])
+  }, [accounts, page])
   
   const connectWallet = async () => {
     setLoading({...loading, connect: true})
@@ -77,34 +76,41 @@ export default function Home() {
     }
   }
 
-  const fetchNFTs = async (address) => {
+  const fetchNFTs = useCallback(async (address) => {
+    setLoading({...loading, nfts: true})
+
     try {
       const response = await axios.get('/api/nfts', {
         params: {
           address,
-          limit: 9,
-          offset: 0
+          limit: LIMIT,
+          offset: page * LIMIT
         }
       });
+
+      console.log('response', response)
 
       const assets = response.data.assets.map((a) => ({
         id: a.id,
         image: a.image_url
       }))
 
-      setNFTs(assets)
-      setSelectedImages(assets)
+      setNFTs([...NFTs, ...assets])
+      setLoading({...loading, nfts: false})
     } catch (error) {
       console.log(error)
+      setLoading({...loading, nfts: false})
     }
-  }
+  }, [NFTs, page])
 
   const generateGIF = async () => {
     if (selectedImages.length === 0) return
     setLoading({...loading, gif: true});
 
     gifshot.createGIF({
-      ...BASE_OPTIONS,
+      gifWidth: 600,
+      gifHeight: 600,
+      frameDuration: 3,
       images: selectedImages.map(i => i.image)
     }, (obj) => {
       setLoading({...loading, gif: false});
@@ -119,9 +125,9 @@ export default function Home() {
   }
 
   return (
-    <Box as='main' px={[4, 6, 10]} py={8}>
+    <Box as='main' px={[4, 6, 10]} pt={10} pb={20}>
       <Flex flexDirection='column' alignItems='center'>
-        <Heading as='h2' size='xl'>Gif Wallet</Heading>
+        <Heading as='h2' size='3xl' color='gray.700'>GIF Wallet</Heading>
         <Text>Turn your NFT collection into a GIF</Text>
 
         <Box my={5}>
@@ -134,13 +140,19 @@ export default function Home() {
           <GifResult gif={gif} onReset={resetGif} />
         )}
         {accounts.length > 0 && !gif && (
-          <BoxContainer>
-            <ImageSelection images={NFTs} onChange={(imgs) => setSelectedImages(imgs)} />
-            <Button mt={5} isLoading={loading.gif} isDisabled={selectedImages.length < 2} colorScheme='green' onClick={generateGIF}>
-              <RepeatIcon mr={2} />
+          <>
+            <BoxContainer>
+              <ImageSelection images={NFTs} onChange={(imgs) => setSelectedImages(imgs)} />
+              <Button mt={5} isLoading={loading.nfts} colorScheme='gray' onClick={() => { setPage(page + 1) }}>
+                <RepeatIcon mr={2} />
+                Load more
+              </Button>
+            </BoxContainer>
+            <Button size='lg' mt={5} isLoading={loading.gif} isDisabled={selectedImages.length < 2} colorScheme='green' onClick={generateGIF}>
+              <CheckCircleIcon mr={2} />
               Generate GIF
             </Button>
-          </BoxContainer>
+          </>
         )}
       </Flex>
     </Box>
