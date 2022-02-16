@@ -21,7 +21,7 @@ const PROVIDER_OPTIONS = {
   walletconnect: {
     package: WalletConnectProvider,
     options: {
-      infuraId: "d5468cdec51b4e139ebedc5bd5ae2251"
+      infuraId: process.env.NEXT_PUBLIC_INFURA_ID
     }
   }
 }
