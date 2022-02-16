@@ -111,6 +111,7 @@ export default function Home() {
       gifWidth: 600,
       gifHeight: 600,
       frameDuration: 3,
+      numWorkers: navigator.hardwareConcurrency || 2,
       images: selectedImages.map(i => i.image)
     }, (obj) => {
       setLoading({...loading, gif: false});
