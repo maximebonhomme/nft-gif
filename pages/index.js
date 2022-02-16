@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useState } from "react"
 import axios from 'axios'
 import gifshot from 'gifshot'
@@ -58,6 +57,7 @@ export default function Home() {
     if (accounts[0]) {
       fetchNFTs(accounts[0])
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accounts, page])
   
   const connectWallet = async () => {
@@ -76,7 +76,7 @@ export default function Home() {
     }
   }
 
-  const fetchNFTs = useCallback(async (address) => {
+  const fetchNFTs = async (address) => {
     setLoading({...loading, nfts: true})
 
     try {
@@ -101,7 +101,7 @@ export default function Home() {
       console.log(error)
       setLoading({...loading, nfts: false})
     }
-  }, [NFTs, page])
+  }
 
   const generateGIF = async () => {
     if (selectedImages.length === 0) return
