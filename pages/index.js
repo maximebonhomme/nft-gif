@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react"
+import axios from 'axios'
 import gifshot from 'gifshot'
 import { Button, Box, Flex, Heading, Text } from '@chakra-ui/react'
 import { RepeatIcon } from '@chakra-ui/icons'
@@ -9,14 +10,6 @@ import WalletConnectProvider from "@walletconnect/web3-provider"
 import GifResult from "../components/GifResult"
 import ImageSelection from "../components/ImageSelection"
 import BoxContainer from "../components/BoxContainer"
-
-const IMAGES = [
-  'https://lh3.googleusercontent.com/iq0CgnMi5uCHDjwzqAhM6wheX8erSJ7s_xY9ZuYmXw-geTFB32KB4qZslSGdKoYjBvAKWkcmN_Aqq0KkbOiNdL7Bl30w-u1FFbK0Kg=w600',
-  'https://lh3.googleusercontent.com/XlW3yFLEK17KY400oCxIss64KoDGdLXI5DvM0pVKProI5L9JKRheM_bY4HSQfckauccOWOf8lPtO5olGJXo1ZJhgh52inuRz_6Lv-j4=w600',
-  'https://lh3.googleusercontent.com/m_O9xhMlRUN0T7RPJQChFvCx44oOF0ZToLitCMX8lc1IwxDGHpBq8dLsWZ0kTyC3MT3qMf9NfjmhqMnfHM2e9QBuzRSASocNa4ZH=w600',
-  'https://lh3.googleusercontent.com/AUoSD8YulzhM7mhOBJ7aZmIR7NpQPbcQwUvlbK2Ca0VEoJQ4J4fu3sT53MOUce4mKQndul0OmCk0YdpWP58N4r5021J7AheUuOxgD4w=w600',
-  'https://lh3.googleusercontent.com/TdMvivmk-cTtQCYmRLBibsMQKUyk-53S4IWsFOBkFlFrd5sIGqLkOIiYzzDolxZsjBbnPWVk8eSoiaAEYopWVoyme4k8BVBQLfet=w600'
-]
 
 const BASE_OPTIONS = {
   gifWidth: 600,
@@ -39,9 +32,10 @@ export default function Home() {
     connect: false
   })
   const [gif, setGif] = useState(null)
-  const [selectedImages, setSelectedImages] = useState(IMAGES)
+  const [selectedImages, setSelectedImages] = useState([])
   const [web3Modal, setWeb3Modal] = useState(null)
   const [accounts, setAccounts] = useState([])
+  const [NFTs, setNFTs] = useState([])
 
   useEffect(() => {
     const web3Modal = new Web3Modal({
@@ -60,6 +54,12 @@ export default function Home() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3Modal])
+
+  useEffect(() => {
+    if (accounts[0]) {
+      fetchNFTs(accounts[0])
+    }
+  }, [accounts])
   
   const connectWallet = async () => {
     setLoading({...loading, connect: true})
@@ -77,13 +77,35 @@ export default function Home() {
     }
   }
 
+  const fetchNFTs = async (address) => {
+    try {
+      const response = await axios.get('/api/nfts', {
+        params: {
+          address,
+          limit: 9,
+          offset: 0
+        }
+      });
+
+      const assets = response.data.assets.map((a) => ({
+        id: a.id,
+        image: a.image_url
+      }))
+
+      setNFTs(assets)
+      setSelectedImages(assets)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const generateGIF = async () => {
     if (selectedImages.length === 0) return
     setLoading({...loading, gif: true});
 
     gifshot.createGIF({
       ...BASE_OPTIONS,
-      images: selectedImages
+      images: selectedImages.map(i => i.image)
     }, (obj) => {
       setLoading({...loading, gif: false});
       if (!obj.error) {
@@ -113,7 +135,7 @@ export default function Home() {
         )}
         {accounts.length > 0 && !gif && (
           <BoxContainer>
-            <ImageSelection images={IMAGES} onChange={(imgs) => setSelectedImages(imgs)} />
+            <ImageSelection images={NFTs} onChange={(imgs) => setSelectedImages(imgs)} />
             <Button mt={5} isLoading={loading.gif} isDisabled={selectedImages.length < 2} colorScheme='green' onClick={generateGIF}>
               <RepeatIcon mr={2} />
               Generate GIF
