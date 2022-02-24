@@ -135,7 +135,7 @@ export default function Home() {
         <meta property="og:title" content="GIF Wallet" />
         <meta property="og:type" content="video.movie" />
         <meta property="og:url" content="https://gifwallet.xyz" />
-        <meta property="og:image" content="/gifwallet-og.img" />
+        <meta property="og:image" content="/gifwallet-og.jpg" />
       </Head>
       <Flex flexDirection='column' alignItems='center'>
         <Heading as='h2' size='3xl' color='gray.700'>GIF Wallet</Heading>
