@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from "react"
 import axios from 'axios'
 import gifshot from 'gifshot'
-import { Button, Box, Flex, Heading, Text, Link } from '@chakra-ui/react'
+import { Button, Box, Flex, Heading, Text, Link, Icon } from '@chakra-ui/react'
 import { RepeatIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { ethers } from "ethers"
 import Web3Modal from "web3modal"
 import WalletConnectProvider from "@walletconnect/web3-provider"
+import { SiGithub } from "react-icons/si";
+
 import GifResult from "../components/GifResult"
 import ImageSelection from "../components/ImageSelection"
 import BoxContainer from "../components/BoxContainer"
@@ -156,10 +158,16 @@ export default function Home() {
           </>
         )}
       </Flex>
-      <Box fontSize='s' bg='white' borderRadius='xl' p={3} position='fixed' bottom={0} right={0}>
-        🛠{' '}
-        <Link href="https://twitter.com/pixel_arts">himlate.eth</Link>
-      </Box>
+      <Flex position='fixed' bottom={1} right={0}>
+        <Box fontSize='s' bg='white' borderRadius='xl' p={3}>
+          <Link ml={1} href="https://twitter.com/pixel_arts">himlate.eth</Link>
+        </Box>
+        <Box fontSize='s' bg='white' borderRadius='xl' p={3} mx={1} >
+          <Link ml={1} href="https://github.com/maximebonhomme">
+            <Icon as={SiGithub} />
+          </Link>
+        </Box>
+      </Flex>
       
     </Box>
   )
