@@ -156,6 +156,11 @@ export default function Home() {
           </>
         )}
       </Flex>
+      <Box fontSize='s' bg='white' borderRadius='xl' p={3} position='fixed' bottom={0} right={0}>
+        🛠{' '}
+        <Link href="https://twitter.com/pixel_arts">himlate.eth</Link>
+      </Box>
+      
     </Box>
   )
 }
