@@ -133,9 +133,17 @@ export default function Home() {
       <Head>
         <title>GIF Wallet</title>
         <meta property="og:title" content="GIF Wallet" />
-        <meta property="og:type" content="video.movie" />
         <meta property="og:url" content="https://gifwallet.xyz" />
-        <meta property="og:image" content="/gifwallet-og.jpg" />
+        <meta property="og:type" content="website" />
+        <meta property="og:description" content="Turn your NFT collection into a GIF" />
+        <meta property="og:image" content="https://gifwallet.xyz/gifwallet-og.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="gifwallet.xyz" />
+        <meta property="twitter:url" content="https://gifwallet.xyz/" />
+        <meta name="twitter:title" content="GIF Wallet" />
+        <meta name="twitter:description" content="Turn your NFT collection into a GIF" />
+        <meta name="twitter:image" content="https://gifwallet.xyz/gifwallet-og.jpg" />
+
       </Head>
       <Flex flexDirection='column' alignItems='center'>
         <Heading as='h2' size='3xl' color='gray.700'>GIF Wallet</Heading>
