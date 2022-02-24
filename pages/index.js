@@ -7,6 +7,7 @@ import { ethers } from "ethers"
 import Web3Modal from "web3modal"
 import WalletConnectProvider from "@walletconnect/web3-provider"
 import { SiGithub } from "react-icons/si";
+import Head from 'next/head'
 
 import GifResult from "../components/GifResult"
 import ImageSelection from "../components/ImageSelection"
@@ -129,6 +130,13 @@ export default function Home() {
 
   return (
     <Box as='main' px={[4, 6, 10]} pt={10} pb={20}>
+      <Head>
+        <title>GIF Wallet</title>
+        <meta property="og:title" content="GIF Wallet" />
+        <meta property="og:type" content="video.movie" />
+        <meta property="og:url" content="https://gifwallet.xyz" />
+        <meta property="og:image" content="/gifwallet-og.img" />
+      </Head>
       <Flex flexDirection='column' alignItems='center'>
         <Heading as='h2' size='3xl' color='gray.700'>GIF Wallet</Heading>
         <Text>Turn your NFT collection into a GIF</Text>
