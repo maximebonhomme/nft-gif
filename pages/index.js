@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import axios from 'axios'
 import gifshot from 'gifshot'
-import { Button, Box, Flex, Heading, Text } from '@chakra-ui/react'
+import { Button, Box, Flex, Heading, Text, Link } from '@chakra-ui/react'
 import { RepeatIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { ethers } from "ethers"
 import Web3Modal from "web3modal"
