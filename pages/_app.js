@@ -1,5 +1,7 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { Box } from '@chakra-ui/react'
+import { init } from "insights-js"
+import { useEffect } from 'react'
 
 import '../styles/global.css'
 
@@ -11,6 +13,10 @@ const theme = extendTheme({
 })
 
 function MyApp({ Component, pageProps }) {
+  useEffect(() => {
+    init("GicGe4o4UpRbxbTz")
+  }, [])
+  
   return (
     <ChakraProvider theme={theme}>
       <Box bg='gray.100' color='gray.900' style={{minHeight: '100vh'}}>

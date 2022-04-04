@@ -8,11 +8,12 @@ import Web3Modal from "web3modal"
 import WalletConnectProvider from "@walletconnect/web3-provider"
 import { SiGithub } from "react-icons/si";
 import Head from 'next/head'
+import { init, track, parameters } from "insights-js"
 
 import GifResult from "../components/GifResult"
 import ImageSelection from "../components/ImageSelection"
 import BoxContainer from "../components/BoxContainer"
-import { getFrameDuration } from "../helpers/gif"
+// import { getFrameDuration } from "../helpers/gif"
 
 const PROVIDER_OPTIONS = {
   walletconnect: {
@@ -43,6 +44,10 @@ export default function Home() {
       network: "mainnet",
       cacheProvider: true,
       providerOptions: PROVIDER_OPTIONS 
+    })
+  
+    track({
+      id: "wallet-connect",
     })
 
     setWeb3Modal(web3Modal)
@@ -120,6 +125,9 @@ export default function Home() {
       setLoading({...loading, gif: false});
       if (!obj.error) {
         setGif(obj.image)
+        track({
+          id: "gif-generated"
+        })
       }
     });
   }
